@@ -1,3 +1,5 @@
+local client = require "client"
+
 local game = {
     ox, oy = 0, 0,
     grid = {},
@@ -15,7 +17,6 @@ local game = {
         scale = .7,
         mouseScale = .5,
     },
-
 }
 
 function game:reset()
@@ -51,10 +52,22 @@ function game:load()
     self.pawns[1] = love.graphics.newImage("sprites/x.png")
     self.pawns[2] = love.graphics.newImage("sprites/o.png")
 
+    client:connect()
     game:reset()
 end
 
 function game:update(dt)
+    local data = client:receive()
+    if data ~= nil then
+        for i = 1, 3 do
+            for j = 1, 3 do
+                local index = (i - 1) * 3 + j
+                -- como se fosse data[index]
+                self.grid[j][i] = tonumber(data:sub(index, index))
+            end
+        end
+        -- 000020010
+    end
 end
 
 function game:draw()
@@ -108,7 +121,7 @@ function game:mousepressed(x,y, button)
 
     local posX = math.floor((x - (self.tilesize/2))/self.tilesize) - 1
     local posY = math.floor((y - (self.tilesize/2))/self.tilesize) 
-
+--[[ 
     if self.grid[posY][posX] == 0 then
         self.grid[posY][posX] = self.player
 
@@ -118,8 +131,9 @@ function game:mousepressed(x,y, button)
         self.player = 2
     else
         self.player = 1
-    end
+    end ]]
 
+    client:send(posX, posY)
 end
 
 
