@@ -7,6 +7,8 @@ local playerX = server:accept()
 local playerO = server:accept()
 
 local turn = 1 -- 1 = "x", 2 = "o"
+local endgame = 0
+local winner = 0
 
 local grid = {}
 for c = 1, 3 do
@@ -14,8 +16,30 @@ for c = 1, 3 do
     for r = 1, 3 do
        grid[c][r] = 0
        -- dependendo se botar 0, 1 ou 2 fica nada, x ou o respectivamente
-    end 
-end  
+    end
+end
+
+function checkWin(grid)
+    if (grid[2][1] ~= 0 and grid[2][1] == grid[2][2] and grid[2][2] == grid[2][3])
+    or (grid[1][2] ~= 0 and grid[1][2] == grid[2][2] and grid[2][2] == grid[3][2])
+    or (grid[1][1] ~= 0 and grid[1][1] == grid[2][2] and grid[2][2] == grid[3][3])
+    or (grid[1][3] ~= 0 and grid[1][3] == grid[2][2] and grid[2][2] == grid[3][1]) then
+        endgame = 1
+        winner = grid[2][2]
+        print("entrou check 1")
+    elseif (grid[1][1] ~= 0 and grid[1][1] == grid[1][2] and grid[1][2] == grid[1][3])
+    or (grid[1][1] ~= 0 and grid[1][1] == grid[2][1] and grid[2][1] == grid[3][1]) then
+        endgame = 1
+        winner = grid[1][1]
+        print("entrou check 2")
+    elseif (grid[3][1] ~= 0 and grid[3][1] == grid[3][2] and grid[3][2] == grid[3][3])
+    or (grid[1][3] ~= 0 and grid[1][3] == grid[2][3] and grid[2][3] == grid[3][3]) then
+        endgame = 1
+        winner = grid[3][3]
+        print("entrou check 3")
+    end
+    return endgame, winner
+end
 
 while true do -- loop infinito
     local message = nil
@@ -33,23 +57,42 @@ while true do -- loop infinito
     y = tonumber(y)
     print(x, y)
 
-    grid[x][y] = turn
+    if grid[x][y] == 0 then
 
-    --checkWin()
+        grid[x][y] = turn
 
-    message = ""
-    for i = 1, 3 do
-        for j = 1, 3 do
-            message = message .. grid[i][j]
+        endgame, winner = checkWin(grid)
+
+        message = ""
+        for i = 1, 3 do
+            for j = 1, 3 do
+                message = message .. grid[i][j]
+            end
         end
-    end
 
-    playerX:send(message)
-    playerO:send(message)
+        message = message .. winner
 
-    if turn == 1 then
-        turn = 2
+        print(message)
+        print(tonumber(message:sub(10, 10)))
+
+        playerX:send(message)
+        playerO:send(message)
+
+        if endgame == 0 then
+            if turn == 1 then
+                turn = 2
+            else
+                turn = 1
+            end
+        else
+            print(winner)
+            break
+        end
     else
-        turn = 1
-    end 
+        print("Jogue novamente")
+    end
+end
+
+while true do
+    a = 0
 end
