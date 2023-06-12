@@ -70,13 +70,26 @@ while true do -- loop infinito
             end
         end
 
-        message = message .. winner
-
-        print(message)
-        print(tonumber(message:sub(10, 10)))
-
-        playerX:send(message)
-        playerO:send(message)
+        if winner == 1 then
+            local message1 = message .. "w"
+            local message2 = message .. "l"
+            print(message1)
+            print(message2)
+            playerX:send(message1)
+            playerO:send(message2)
+        elseif winner == 2 then
+            local message1 = message .. "l"
+            local message2 = message .. "w"
+            print(message1)
+            print(message2)
+            playerX:send(message1)
+            playerO:send(message2)
+        else
+            message = message .. "o"
+            print(message)
+            playerX:send(message)
+            playerO:send(message)
+        end
 
         if endgame == 0 then
             if turn == 1 then

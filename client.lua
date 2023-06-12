@@ -12,7 +12,7 @@ function client:send(x, y)
 end
 
 function client:receive()
-    return self.connection:receive(9)
+    return self.connection:receive(10)
 end
 
 return client
