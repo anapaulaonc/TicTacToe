@@ -27,6 +27,7 @@ function checkWin(grid)
         endgame = 1
         winner = grid[2][2]
         print("entrou check 1")
+
     elseif (grid[1][1] ~= 0 and grid[1][1] == grid[1][2] and grid[1][2] == grid[1][3])
     or (grid[1][1] ~= 0 and grid[1][1] == grid[2][1] and grid[2][1] == grid[3][1]) then
         endgame = 1
@@ -77,6 +78,8 @@ while true do -- loop infinito
             print(message2)
             playerX:send(message1)
             playerO:send(message2)
+
+            
         elseif winner == 2 then
             local message1 = message .. "l"
             local message2 = message .. "w"

@@ -17,6 +17,10 @@ local game = {
         scale = .7,
         mouseScale = .5,
     },
+    winning = {
+        [1] = nil,
+        [2] = nil,
+    }
 }
 
 function game:reset()
@@ -51,6 +55,8 @@ function game:load()
     self.oy = SCREENHEIGHT / 2 - (self.height * self.tilesize) / 2
     self.pawns[1] = love.graphics.newImage("sprites/x.png")
     self.pawns[2] = love.graphics.newImage("sprites/o.png")
+    self.winning[1] = love.graphics.newImage("sprites/win1.png")
+    self.winning[2] = love.graphics.newImage("sprites/win2.png")
 
     client:connect()
     game:reset()
@@ -66,7 +72,10 @@ function game:update(dt)
                 self.grid[j][i] = tonumber(data:sub(index, index))
             end
         end
-        -- 000020010
+        local victory = 10
+        if data:sub(10,10) ~= nil then
+            love.graphics.draw(winning[1])
+        end    
     end
 end
 
@@ -83,9 +92,12 @@ function game:draw()
             if value == 2 then
                 love.graphics.draw(self.pawns[2], ((posX-1)*self.tilesize)+ self.ox, ((posY- 1)*self.tilesize)+ self.oy)
             end
+            
 
         end
-    end        
+
+    end     
+
 
 
     -- local dx, dy = self.ox, self.oy
@@ -108,12 +120,12 @@ function game:draw()
     --     dy = dy + self.tilesize
     --end
 
-    love.graphics.draw(self.players[self.player], 
-        love.mouse.getX(),
-        love.mouse.getY(),
-        0, self.pawns.mouseScale, self.pawns.mouseScale,
-        (self.players[self.player]:getWidth()/2)* (self.pawns.mouseScale/2), 
-        (self.players[self.player]:getHeight()/2)* (self.pawns.mouseScale/2))
+    -- love.graphics.draw(self.players[self.player], 
+    --     love.mouse.getX(),
+    --     love.mouse.getY(),
+    --     0, self.pawns.mouseScale, self.pawns.mouseScale,
+    --     (self.players[self.player]:getWidth()/2)* (self.pawns.mouseScale/2), 
+    --     (self.players[self.player]:getHeight()/2)* (self.pawns.mouseScale/2))
     
 end
 
