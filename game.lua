@@ -17,14 +17,15 @@ local game = {
         scale = .7,
         mouseScale = .5,
     },
-    winning = {
-        [1] = nil,
-        [2] = nil,
-    }
+    --reset = false,
+    --userVictory = 0,
+
 }
 
 function game:reset()
     self.grid = {}
+    --self.reset = false
+    --self.userVictory = 0
 
     
     love.math.setRandomSeed(love.timer.getTime())
@@ -55,8 +56,8 @@ function game:load()
     self.oy = SCREENHEIGHT / 2 - (self.height * self.tilesize) / 2
     self.pawns[1] = love.graphics.newImage("sprites/x.png")
     self.pawns[2] = love.graphics.newImage("sprites/o.png")
-    self.winning[1] = love.graphics.newImage("sprites/win1.png")
-    self.winning[2] = love.graphics.newImage("sprites/win2.png")
+    --self.winning[1] = love.graphics.newImage("sprites/win1.png")
+    --self.winning[2] = love.graphics.newImage("sprites/win2.png")
 
     client:connect()
     game:reset()
@@ -64,18 +65,23 @@ end
 
 function game:update(dt)
     local data = client:receive()
+    
     if data ~= nil then
+        local win = data:sub(10,10)
         for i = 1, 3 do
             for j = 1, 3 do
                 local index = (i - 1) * 3 + j
                 -- como se fosse data[index]
                 self.grid[j][i] = tonumber(data:sub(index, index))
+
             end
         end
-        local victory = 10
-        if data:sub(10,10) ~= nil then
-            love.graphics.draw(winning[1])
+        if win ~= "o" then
+            GAME = require"winner"
+            GAME:load(win)
         end    
+        
+           
     end
 end
 
@@ -92,7 +98,8 @@ function game:draw()
             if value == 2 then
                 love.graphics.draw(self.pawns[2], ((posX-1)*self.tilesize)+ self.ox, ((posY- 1)*self.tilesize)+ self.oy)
             end
-            
+
+        
 
         end
 
