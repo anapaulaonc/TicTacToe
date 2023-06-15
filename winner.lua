@@ -9,6 +9,10 @@ function winner:load(value)
     if value == "l" then
         self.image = love.graphics.newImage("sprites/LOSE.png")
     end
+    if value == "d" then
+        self.image = love.graphics.newImage("sprites/DRAW.png")
+    end    
+
     
 end
 

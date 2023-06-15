@@ -76,10 +76,20 @@ function game:update(dt)
 
             end
         end
+        
         if win ~= "o" then
             GAME = require"winner"
             GAME:load(win)
+
+        elseif win == "o" and string.find(data, "0") == nil then
+            win = "d"
+            print("entrei no empate")
+            GAME = require"winner"
+            GAME:load(win)
         end    
+    
+
+        
         
            
     end
